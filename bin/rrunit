@@ -31,8 +31,8 @@ OptionParser.new do |opts|
     options[:exported_environment] = JSON.parse(env)
   end
   
-  opts.on('-a', "--args <json>", "The arguments to the service command") do |env|
-    options[:args] = JSON.parse(env)
+  opts.on('-a', "--args <quoted-string>", "The arguments to the service command") do |args|
+    options[:args] = args.split(' ')
   end
   
 end.parse!
