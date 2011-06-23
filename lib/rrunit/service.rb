@@ -3,9 +3,11 @@ module Rrunit
   class Service
     
     attr_reader :name
+    attr_reader :command
     
-    def initialize(name)
-      @name = name
+    def initialize(command)
+      @command = command
+      @name = File.basename(command)
       @environment = Hash.new
       @exported_environment = Hash.new
       @args = Array.new
@@ -42,7 +44,7 @@ module Rrunit
     
     def service
       sv = Array.new
-      cmd = "exec #{name}"
+      cmd = "exec #{command}"
       cmd << " #{@args.join(' ')}" unless @args.empty?
       sv << "#!/bin/bash"
       @exported_environment.each do |key, value|

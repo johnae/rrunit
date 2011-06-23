@@ -5,14 +5,18 @@ module Rrunit
     
     context "default settings" do
     
-      let(:runit_service) { Service.new('service') }
+      let(:runit_service) { Service.new('/usr/bin/service') }
       
       it "has a name" do
         runit_service.name.should == 'service'
       end
       
+      it "has a command" do
+        runit_service.command.should == '/usr/bin/service'
+      end
+      
       it "has a basic runit run string" do
-        runit_service.service.should == ["#!/bin/bash","exec #{runit_service.name}"].join("\n")
+        runit_service.service.should == ["#!/bin/bash","exec #{runit_service.command}"].join("\n")
       end
       
     end
@@ -26,7 +30,7 @@ module Rrunit
       end
       
       it "has a runit run string with arguments" do
-        runit_service.service.should == ["#!/bin/bash","exec #{runit_service.name} -arg1 1 -arg2 2"].join("\n")
+        runit_service.service.should == ["#!/bin/bash","exec #{runit_service.command} -arg1 1 -arg2 2"].join("\n")
       end
       
     end
@@ -40,7 +44,7 @@ module Rrunit
       }
     
       it "has a runit run string with environment variables set" do
-        runit_service.service.should == ["#!/bin/bash", "export EVARIABLE1=\"exported\"", "VARIABLE1=\"127.0.0.1\"", "VARIABLE2=\"www.google.com\"", "VARIABLE3=100", "exec #{runit_service.name}"].join("\n")
+        runit_service.service.should == ["#!/bin/bash", "export EVARIABLE1=\"exported\"", "VARIABLE1=\"127.0.0.1\"", "VARIABLE2=\"www.google.com\"", "VARIABLE3=100", "exec #{runit_service.command}"].join("\n")
       end
       
     end

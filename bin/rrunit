@@ -12,7 +12,7 @@ OptionParser.new do |opts|
   opts.banner = "Usage: rrunit -c <service-command>"
   
   opts.on('-c', "--command <command>", "The service command") do |command|
-    options[:name] = command
+    options[:command] = command
   end
   
   opts.on('-l', "--logdir <logdir>", "The service logdir") do |logdir|
@@ -31,10 +31,14 @@ OptionParser.new do |opts|
     options[:exported_environment] = JSON.parse(env)
   end
   
+  opts.on('-a', "--args <json>", "The arguments to the service command") do |env|
+    options[:args] = JSON.parse(env)
+  end
+  
 end.parse!
 
-unless options.key?(:name)
-  puts "You must at least give the service a name"
+unless options.key?(:command)
+  puts "You must at least specify a command"
   exit(1)
 end
 
@@ -42,7 +46,7 @@ output = options.delete(:output)
 output = '/tmp' unless output
 output = "#{output}/#{options[:name]}"
 
-r = Rrunit::Service.new(options.delete(:name))
+r = Rrunit::Service.new(options.delete(:command))
 options.each do |key,value|
   r.send(key, value)
 end
