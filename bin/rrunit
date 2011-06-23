@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+$LOAD_PATH.unshift(File.expand_path(File.dirname(__FILE__) + '/../lib'))
+require 'rrunit'
+require 'optparse'
+require 'json'
+
+options = {
+}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: rrunit -c <service-command>"
+  
+  opts.on('-c', "--command <command>", "The service command") do |command|
+    options[:name] = command
+  end
+  
+  opts.on('-l', "--logdir <logdir>", "The service logdir") do |logdir|
+    options[:log_dir] = logdir
+  end
+  
+  opts.on('-o', "--outputdir <outputdir>", "The directory to output the service") do |output|
+    options[:output] = output
+  end
+  
+  opts.on('-e', "--env <json>", "The environment variables") do |env|
+    options[:environment] = JSON.parse(env)
+  end
+  
+  opts.on('-x', "--xenv <json>", "The exported environment variables") do |env|
+    options[:exported_environment] = JSON.parse(env)
+  end
+  
+end.parse!
+
+unless options.key?(:name)
+  puts "You must at least give the service a name"
+  exit(1)
+end
+
+output = options.delete(:output)
+output = '/tmp' unless output
+output = "#{output}/#{options[:name]}"
+
+r = Rrunit::Service.new(options.delete(:name))
+options.each do |key,value|
+  r.send(key, value)
+end
+
+r.write(output)

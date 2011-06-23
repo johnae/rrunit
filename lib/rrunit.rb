@@ -1,5 +1,7 @@
+require 'fileutils'
 require "rrunit/version"
-
-module Rrunit
-  # Your code goes here...
-end
+require "rrunit/service"
+#module Rrunit
+#  # Your code goes here...
+#end
+#
