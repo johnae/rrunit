@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Rrunit::VERSION
   s.authors     = ["John Axel Eriksson"]
   s.email       = ["john@insane.se"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/johnae/rrunit"
   s.summary     = %q{Creates and writes runit service files}
   s.description = %q{Creates and writes runit service files}
 
