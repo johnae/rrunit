@@ -69,6 +69,7 @@ module Rrunit
       
       before do
         FileUtils.rm_rf(runit_output_directory)
+        runit_service.write(runit_output_directory)
       end
       
       after(:all) do
@@ -84,14 +85,15 @@ module Rrunit
         }
         
         it "writes the runit configuration files to specified location" do
-          runit_service.write(runit_output_directory)
           File.directory?(runit_output_directory).should be true
           File.exists?("#{runit_output_directory}/run").should be true
+        end
+        
+        it "the runit run file should be executable" do
           File.stat("#{runit_output_directory}/run").executable?.should be true
         end
         
         it "the program run file should contain the service" do
-          runit_service.write(runit_output_directory)
           File.read("#{runit_output_directory}/run").should == runit_service.service+"\n"
         end
         
@@ -106,23 +108,29 @@ module Rrunit
             .log_dir('/tmp/somedir')
         }
         
-        it "writes the runit configuration files including log service to specified location" do
-          runit_service.write(runit_output_directory)
+        it "writes the runit configuration files to specified location" do
           File.directory?(runit_output_directory).should be true
           File.exists?("#{runit_output_directory}/run").should be true
-          File.stat("#{runit_output_directory}/run").executable?.should be true
-          File.directory?("#{runit_output_directory}/log").should be true
-          File.exists?("#{runit_output_directory}/log/run").should be true
-          File.stat("#{runit_output_directory}/log/run").executable?.should be true
         end
         
-        it "the program run file should contain the service" do
-          runit_service.write(runit_output_directory)
+        it "the runit run file should be executable" do
+          File.stat("#{runit_output_directory}/run").executable?.should be true
+        end
+        
+        it "the runit run file should contain the service" do
           File.read("#{runit_output_directory}/run").should == runit_service.service+"\n"
         end
         
-        it "the program log/run file should contain the log service" do
-          runit_service.write(runit_output_directory)
+        it "writes the runit log service to specified location" do
+          File.directory?("#{runit_output_directory}/log").should be true
+          File.exists?("#{runit_output_directory}/log/run").should be true
+        end
+        
+        it "the runit log service run file should be executable" do
+          File.stat("#{runit_output_directory}/log/run").executable?.should be true
+        end
+        
+        it "the runit log service run file should contain the log service" do
           File.read("#{runit_output_directory}/log/run").should == runit_service.log_service+"\n"
         end
         
